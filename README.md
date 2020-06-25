@@ -32,24 +32,24 @@ So, I decided to build out on a standard Jetson Nano Development board. Even tho
 
 ## Procedure
 
-This is a pretty standard build for Nvidia newcomers like myself. I followed resources available from the developer nvidia documentation/forums and Jetson Hacks.
+This is a pretty standard build for Nvidia newcomers like myself. I followed resources available from the developer nvidia [documentation/forums](https://forums.developer.nvidia.com/) and [Jetson Hacks](https://www.youtube.com/channel/UCQs0lwV6E4p7LQaGJ6fgy5Q).
 
 ### 0. Flash and bootup Jetson Nano
 
+Before we get started, make sure you have ordered and received your Jetson Nano Developer Kit, and Samsung Micro SD card. Hopefully you have also have a spare monitor with an HDMI port laying around. 
 
-Before we get started, make sure you have ordered Jetson Nano Developer Kit, and Samsung Micro SD card. Hopefully you have also have a spare monitor with HDMI port laying around. 
+The first step is to flash your SD card with Nvidia's [Jetpack](https://developer.nvidia.com/embedded/jetpack) OS, which is essentially Ubuntu with some extra software and Nvida SDKs that come pre-installed. Plug in the MicroSD card into your day to day computer for the initial flashing.
 
-The first step is to flash your SD card with Nvidia Jetpack OS, which is essentially Ubuntu with some extra software and Nvida SDKs that come pre-installed. Plug in the MicroSD card into your day to day computer for the initial flashing.
-
-Follow the [instructions](https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#write) from the Jetson Nano Get Started guid to write the image to the SD card. It contains references for mac, linux, and windows.
-
-Plugin the flashed SD card into the back of the device, and provide power through the Micro USB port. 
+Follow the [instructions](https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#write) from the Jetson Nano Get Started guide to write the image to your SD card. The guide includes references for mac, linux, and windows. Plugin the flashed SD card into the back of the device, and provide power through the Micro USB port. 
 
 ![jetpack screen here](jetpack_logo.jpg)
+
 
 ### 1. Internet Connection and SSH
 
 The developer board comes with an ethernet port. Simply hook it up to your router. Keep in mind you may need to relocate your router next to your nano device or get a really long ethernet cable.
+
+Run this shell script on your nano device to get the LAN IP address. Then we can connect over ssh to the device. `ssh USERNAME@LANIP`
 
 ```
 NETCONF=$(ifconfig)
@@ -59,10 +59,7 @@ LANIP=$(echo "${IPADDRS}" | grep 192 | grep -v 255)
 echo "${LANIP}"
 ```
 
-Run this shell script on your nano device to get the LAN IP address. Then we can connect over ssh to the device. `ssh USERNAME@LANIP`
-
-
-### 2. Attach Sony IMX219 Camera Sensor
+### 2. Attach/Configure Sony IMX219 Camera Sensor
 
 Pretty simple to install camera into one of the two CSI ports on the jetson nano, make sure contact stripts are facing towards the device and secure the clip for stable contact.
 
@@ -72,11 +69,33 @@ Now you can check if the camera is working by capturing a live video stream and 
 gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! nvoverlaysink
 ```
 
-Gstreamer is a great tool for handling video feeds. Highly recommend the intro tutorials which uses the C API. Your Jetpack comes with hardware acceleration out of the box. You can 
+Gstreamer is a great tool for handling video feeds. Highly recommend the [intro tutorials](https://gstreamer.freedesktop.org/documentation/tutorials/basic/index.html?gi-language=c) which uses the C API. Your Jetpack Gstreamer comes with hardware acceleration out of the box.
 
-nvarguscamerasrc is an nvidia tool for automating camera bring up and configurations. It uses tools like libargus an v4l2 under the hood.   
+[nvarguscamerasrc](Hiaxu2bM2gk_VWiYivfDAs6PoSAV9LNuVKM_T1cAbmyGW6mYM8E_0c) is an nvidia tool for automating camera bring up and configurations. It uses the [libargus](https://docs.nvidia.com/jetson/l4t-multimedia/group__LibargusAPI.html) api under the hood.
 
 ### 3. Fan and Power Supply Setup
 
+At this point you are up and running with your nano device. If you try running some of the [DeepStream](https://docs.nvidia.com/metropolis/deepstream/4.0/dev-guide/index.html) example projects which use neural nets on video streams you will start to see your nano heat up. You can run `tegrastats` to diagnose your nano. You
+
+```
+$ tegrastats
+
+RAM 3029/3956MB (lfb 46x4MB) SWAP 429/1978MB (cached 15MB) 
+CPU [24%@921,23%@921,19%@921,15%@921] 
+EMC_FREQ 0% GR3D_FREQ 51% PLL@4aa 
+CPU@47a PMIC@100C GPU@46.5C AO@53C 
+thermal@46.75C POM_5V_IN 5716/5591 
+POM_5V_GPU 2204/2170 POM_5V_CPU 708/845
+```
+
+Now it is time to install a proper power supply and fan. The power supply provides `4A * 5V = 20W` of power. In order to use barrell jack instead of microusb, use the jumper pin provided in the devleopment to cover `J48 Power Jack/USB Power Select Jumper`. Plug power supply into barrell and the nano should boot up.
+
+
+![power](power.png)
 
 ### 4. Enclosure and Camera Mount
+
+
+
+![open](open.jpg)
+
