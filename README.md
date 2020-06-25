@@ -6,21 +6,23 @@
 
 I have recently been toying around with computer vision more. I was looking for a [low cost Nvidia GPU](https://developer.nvidia.com/embedded/jetson-nano-developer-kit) and [camera sensor](https://www.electronicsdatasheets.com/download/5721ed8ce34e24fd697a913a.pdf?format=pdf) to bootstrap some projects. Sure you can started programming inside a [Google Colabnotebook](https://colab.research.google.com/), but I am more interested in embedded systems and [applied machine learning](https://github.com/onnx/models). 
 
-The goal is to start programming real-time camera pipelines, converting state of the art models into TensorRT, and using Nvidia optimized computer vision libraries for things like optical flow and slam! My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up.
+The goal is to start programming real-time camera pipelines, converting state of the art models into [TensorRT](https://docs.nvidia.com/deeplearning/tensorrt/api/python_api/index.html), and using Nvidia optimized [computer vision libraries](https://developer.nvidia.com/embedded/visionworks-1-5-3) for things like [optical flow](https://developer.nvidia.com/opticalflow-sdk) and [slam](https://arxiv.org/pdf/1911.11763.pdf). My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up.
 
 ![prices](prices.png)
 
-I quick look at the prices and you can see that you actually pay more per cuda core as you up the line. The Jetson Nano and TX2 both aSo, I decided to build out a standard Jetson Nano hardware setup. This guide will go over how to put it all together.
+I quick look at the [prices](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/) and you can see that you actually pay more per cuda core as you up the line. The Jetson Nano and TX2 both at around $1 per core. A closer look at the specs,  shows the [Jetson Xavier](https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit) series boards also include tensor cores for doing 8 bit operations and a dedicated vision processing module which may justify the higher price. 
+
+So, I decided to build out on a standard Jetson Nano Development board. Even though the board is listed at $128 for 1k volume, I was able to find one amazon for a little over a $100. My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up. This guide will go over how to put it all together.
 
 ![jetson nano](jetson_nano.jpg)
 
 ## Materials
 
-0. Nvidia Jetson Nano Developer Kit
+0. [Nvidia Jetson Nano Developer Kit](https://developer.nvidia.com/embedded/jetson-nano-developer-kit)
 
-1. Sony IMX219 Wide Angle CSI Camera Sensor
+1. [Sony IMX219 Wide Angle CSI Camera Sensor](https://www.sainsmart.com/products/sainsmart-imx219-camera-module-for-nvidia-jetson-nano-board-8mp-sensor-160-degree-fov)
 
-2. Samsung (MB-ME128GA/AM) 128GB 100MB/s (U3) MicroSDXC EVO Select Memory Card
+2. [Samsung (MB-ME128GA/AM) 128GB 100MB/s (U3) MicroSDXC EVO Select Memory Card](https://www.samsung.com/us/support/computing/memory-storage/memory-cards)
 
 3. Adafruit 5V 10A Switching Power Supply
 
