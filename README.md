@@ -24,16 +24,15 @@ So, I decided to build out on a standard Jetson Nano Development board. Even tho
 
 2. [Samsung (MB-ME128GA/AM) 128GB 100MB/s (U3) MicroSDXC EVO Select Memory Card](https://www.samsung.com/us/support/computing/memory-storage/memory-cards)
 
-3. Adafruit 5V 10A Switching Power Supply
+3. [Adafruit 5V 10A Switching Power Supply](https://www.adafruit.com/product/1466)
 
-4. Noctua NF-A4x20 5V PWM, Premium Quiet Fan, 4-Pin, 5V Version
+4. [Noctua NF-A4x20 5V PWM, Premium Quiet Fan, 4-Pin, 5V Version](https://noctua.at/en/nf-a4x20-5v-pwm)
 
-5. Geekworm NVIDIA Jetson Nano Metal Case/Enclosure with Power & Reset Control Switch
+5. [Geekworm NVIDIA Jetson Nano Metal Case/Enclosure with Power & Reset Control Switch](https://geekworm.com/products/geekworm-nvidia-jetson-nano-metal-case-with-power-reset-control-switch)
 
 ## Procedure
 
-This is a pretty standard build for Nvidia newcomers like myself. I followed resources available from the developer nvidia documentation and Jetson Hacks helpful vidoes. Here are some links I found helpful:
-
+This is a pretty standard build for Nvidia newcomers like myself. I followed resources available from the developer nvidia documentation/forums and Jetson Hacks.
 
 ### 0. Flash and bootup Jetson Nano
 
