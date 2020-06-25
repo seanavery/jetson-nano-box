@@ -90,12 +90,18 @@ POM_5V_GPU 2204/2170 POM_5V_CPU 708/845
 
 Now it is time to install a proper power supply and fan. The power supply provides `4A * 5V = 20W` of power. In order to use barrell jack instead of microusb, use the jumper pin provided in the devleopment to cover `J48 Power Jack/USB Power Select Jumper`. Plug power supply into barrell and the nano should boot up.
 
-
 ![power](power.png)
+
+To attatch the fan, first use an M3 threading tool to exapnd the holes ontop of the heatsink. I used an `Aligle 5pcs Brand New Daily Household Steel Silver Adjustable T Type One-Hand Ratchet Wrench with M3-M8 Taps Threading Tool (M3-M8)` to get the job done. Next use M3 25mm hex screws to bolt the fan to the heatsink.
 
 ### 4. Enclosure and Camera Mount
 
-
+Attach power an reset button and connect the CSI camera before screwing the board into the base of the box. 
 
 ![open](open.jpg)
 
+I attached the camera mount panel to the opposite of the CSI ports to allow the ribbon cable to lay flight when packed.
+
+## Conclusion
+
+Ok, we now have a fully functioning and powerful computer vision camera to work with. In the next experiment, we will build a realtime camera that runs object detection on the gpu.
