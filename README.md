@@ -73,6 +73,16 @@ Gstreamer is a great tool for handling video feeds. Highly recommend the [intro 
 
 [nvarguscamerasrc](Hiaxu2bM2gk_VWiYivfDAs6PoSAV9LNuVKM_T1cAbmyGW6mYM8E_0c) is an nvidia tool for automating camera bring up and configurations. It uses the [libargus](https://docs.nvidia.com/jetson/l4t-multimedia/group__LibargusAPI.html) api under the hood.
 
+You may notice some pink vignnetting on the outside edges of the frame. We can easily download some ISP overrides to solve this issue.
+
+```
+wget https://www.waveshare.com/w/upload/e/eb/Camera_overrides.tar.gz
+tar zxvf Camera_overrides.tar.gz 
+mv camera_overrides.isp /var/nvidia/nvcam/settings/
+sudo chmod 664 /var/nvidia/nvcam/settings/camera_overrides.isp
+sudo chown root:root /var/nvidia/nvcam/settings/camera_overrides.isp
+```
+
 ### 3. Fan and Power Supply Setup
 
 At this point you are up and running with your nano device. If you try running some of the [DeepStream](https://docs.nvidia.com/metropolis/deepstream/4.0/dev-guide/index.html) example projects which use neural nets on video streams you will start to see your nano heat up. You can run `tegrastats` to diagnose your nano. You
