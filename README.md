@@ -108,7 +108,7 @@ To attatch the fan, first use an M3 threading tool to exapnd the holes ontop of 
 
 Attach power an reset button and connect the CSI camera before screwing the board into the base of the box. 
 
-![open](open.jpg)
+![open](inside.jpg)
 
 I attached the camera mount panel to the opposite of the CSI ports to allow the ribbon cable to lay flight when packed.
 
