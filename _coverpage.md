@@ -1,1 +1,1 @@
-![](cover.jpg)
+![](jetson_nano_white.jpg)
