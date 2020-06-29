@@ -4,15 +4,15 @@
 
 ## Overview
 
-I have recently been toying around with computer vision more. I was looking for a [low cost Nvidia GPU](https://developer.nvidia.com/embedded/jetson-nano-developer-kit) and [camera sensor](https://www.electronicsdatasheets.com/download/5721ed8ce34e24fd697a913a.pdf?format=pdf) to bootstrap some projects. Sure you can started programming inside a [Google Colabnotebook](https://colab.research.google.com/), but I am more interested in embedded systems and [applied machine learning](https://github.com/onnx/models). 
+I have recently been toying around with computer vision more. I was looking for a [low cost Nvidia GPU](https://developer.nvidia.com/embedded/jetson-nano-developer-kit) and [camera sensor](https://www.electronicsdatasheets.com/download/5721ed8ce34e24fd697a913a.pdf?format=pdf) to bootstrap some projects. Sure you can started programming inside a [Google Colab notebook](https://colab.research.google.com/), but I am more interested in embedded systems and [applied machine learning](https://github.com/onnx/models). 
 
 The goal is to start programming real-time camera pipelines, converting state of the art models into [TensorRT](https://docs.nvidia.com/deeplearning/tensorrt/api/python_api/index.html), and using Nvidia optimized [computer vision libraries](https://developer.nvidia.com/embedded/visionworks-1-5-3) for things like [optical flow](https://developer.nvidia.com/opticalflow-sdk) and [slam](https://arxiv.org/pdf/1911.11763.pdf). My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up.
 
 ![prices](prices.png)
 
-I quick look at the [prices](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/) and you can see that you actually pay more per cuda core as you up the line. The Jetson Nano and TX2 both at around $1 per core. A closer look at the specs,  shows the [Jetson Xavier](https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit) series boards also include tensor cores for doing 8 bit operations and a dedicated vision processing module which may justify the higher price. 
+I quick look at[prices](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/) and you can see that you actually pay more per cuda core as you go up the product line. The Jetson Nano and TX2 both at around $1 per core. A closer look at the specs,  shows the [Jetson Xavier](https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit) series boards also include tensor cores for doing 8 bit operations, and a dedicated vision processing module which may justify the higher price. 
 
-So, I decided to build out on a standard Jetson Nano Development board. Even though the board is listed at $128 for 1k volume, I was able to find one amazon for a little over a $100. My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up. This guide will go over how to put it all together.
+So, I decided to build out on a standard Jetson Nano Development kit. Even though the board is listed at $128 for 1k volume, I was able to find one Amazon for a little over a $100. My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up. This guide will go over how I put it all together.
 
 ![jetson nano](jetson_nano.jpg)
 
@@ -32,7 +32,7 @@ So, I decided to build out on a standard Jetson Nano Development board. Even tho
 
 ## Procedure
 
-This is a pretty standard build for Nvidia newcomers like myself. I followed resources available from the developer nvidia [documentation/forums](https://forums.developer.nvidia.com/) and [Jetson Hacks](https://www.youtube.com/channel/UCQs0lwV6E4p7LQaGJ6fgy5Q).
+This is a pretty standard build for Nvidia newcomers like myself. I followed resources available from the Nvidia developer's [documentation/forums](https://forums.developer.nvidia.com/) and [Jetson Hacks](https://www.youtube.com/channel/UCQs0lwV6E4p7LQaGJ6fgy5Q) helpful guides.
 
 ### 0. Flash and bootup Jetson Nano
 
@@ -44,10 +44,31 @@ Follow the [instructions](https://developer.nvidia.com/embedded/learn/get-starte
 
 ![jetpack screen here](jetpack_logo.jpg)
 
+```
+$ lsb_release -a # Ubuntu Version
+
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 18.04.4 LTS
+Release:        18.04
+Codename:       bionic
+
+$ cat /etc/nv_tegra_release # Jetpack Version
+
+# R32 (release), REVISION: 4.2, GCID: 20074772, BOARD: t210ref, 
+# EABI: aarch64, DATE: Thu Apr  9 01:22:12 UTC 2020
+
+$ nvcc --version # Cuda Version
+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2019 NVIDIA Corporation
+Built on Wed_Oct_23_21:14:42_PDT_2019
+Cuda compilation tools, release 10.2, V10.2.89
+```
 
 ### 1. Internet Connection and SSH
 
-The developer board comes with an ethernet port. Simply hook it up to your router. Keep in mind you may need to relocate your router next to your nano device or get a really long ethernet cable.
+The developer board comes with an ethernet port. Simply hook it up to your router. Keep in mind you may need to relocate your router next to the nano device or get a really long ethernet cable.
 
 Run this shell script on your nano device to get the LAN IP address. Then we can connect over ssh to the device. `ssh USERNAME@LANIP`
 
@@ -59,6 +80,8 @@ LANIP=$(echo "${IPADDRS}" | grep 192 | grep -v 255)
 echo "${LANIP}"
 ```
 
+It usually much more comferatable to develop over ssh with your day to day machine. If you need to visualize a realtime display then you will need to use the nano board directly.
+
 ### 2. Attach/Configure Sony IMX219 Camera Sensor
 
 Pretty simple to install camera into one of the two CSI ports on the jetson nano, make sure contact stripts are facing towards the device and secure the clip for stable contact.
@@ -69,7 +92,7 @@ Now you can check if the camera is working by capturing a live video stream and 
 gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! nvoverlaysink
 ```
 
-Gstreamer is a great tool for handling video feeds. Highly recommend the [intro tutorials](https://gstreamer.freedesktop.org/documentation/tutorials/basic/index.html?gi-language=c) which uses the C API. Your Jetpack Gstreamer comes with hardware acceleration out of the box.
+Gstreamer is a great tool for handling video feeds. Highly recommend the [intro tutorials](https://gstreamer.freedesktop.org/documentation/tutorials/basic/index.html?gi-language=c) which use the C API. Your Jetpack Gstreamer comes with hardware acceleration out of the box.
 
 [nvarguscamerasrc](Hiaxu2bM2gk_VWiYivfDAs6PoSAV9LNuVKM_T1cAbmyGW6mYM8E_0c) is an nvidia tool for automating camera bring up and configurations. It uses the [libargus](https://docs.nvidia.com/jetson/l4t-multimedia/group__LibargusAPI.html) api under the hood.
 
@@ -85,7 +108,7 @@ sudo chown root:root /var/nvidia/nvcam/settings/camera_overrides.isp
 
 ### 3. Fan and Power Supply Setup
 
-At this point you are up and running with your nano device. If you try running some of the [DeepStream](https://docs.nvidia.com/metropolis/deepstream/4.0/dev-guide/index.html) example projects which use neural nets on video streams you will start to see your nano heat up. You can run `tegrastats` to diagnose your nano. You
+At this point you are up and running with your nano device. If you try running some of the [DeepStream](https://docs.nvidia.com/metropolis/deepstream/4.0/dev-guide/index.html) example projects which use neural nets on video streams you will start to see your nano heat up. You can run `tegrastats` to diagnose your nano.
 
 ```
 $ tegrastats
