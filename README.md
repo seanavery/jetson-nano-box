@@ -70,7 +70,7 @@ Cuda compilation tools, release 10.2, V10.2.89
 
 The developer board comes with an ethernet port. Simply hook it up to your router. Keep in mind you may need to relocate your router next to the nano device or get a really long ethernet cable.
 
-Run this shell script on your nano device to get the LAN IP address. Then we can connect over ssh to the device. `ssh USERNAME@LANIP`
+Run this shell script on your nano device to get the `LAN IP` address. Then we can connect over ssh to the device. `ssh USERNAME@LANIP`
 
 ```
 NETCONF=$(ifconfig)
@@ -80,7 +80,7 @@ LANIP=$(echo "${IPADDRS}" | grep 192 | grep -v 255)
 echo "${LANIP}"
 ```
 
-It usually much more comferatable to develop over ssh with your day to day machine. If you need to visualize a realtime display then you will need to use the nano board directly.
+It usually much more comferatable to develop over SSH with your day to day machine. If you need to visualize a realtime display then you will need to use the nano board directly.
 
 ### 2. Attach/Configure Sony IMX219 Camera Sensor
 
@@ -94,9 +94,9 @@ gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! nvoverlaysink
 
 Gstreamer is a great tool for handling video feeds. Highly recommend the [intro tutorials](https://gstreamer.freedesktop.org/documentation/tutorials/basic/index.html?gi-language=c) which use the C API. Your Jetpack Gstreamer comes with hardware acceleration out of the box.
 
-[nvarguscamerasrc](Hiaxu2bM2gk_VWiYivfDAs6PoSAV9LNuVKM_T1cAbmyGW6mYM8E_0c) is an nvidia tool for automating camera bring up and configurations. It uses the [libargus](https://docs.nvidia.com/jetson/l4t-multimedia/group__LibargusAPI.html) api under the hood.
+[nvarguscamerasrc](Hiaxu2bM2gk_VWiYivfDAs6PoSAV9LNuVKM_T1cAbmyGW6mYM8E_0c) is a Nvidia tool for automating camera bring up and configurations. It uses the [libargus](https://docs.nvidia.com/jetson/l4t-multimedia/group__LibargusAPI.html) API under the hood. You can further configure camera paramters like whitebalance, and exposure using this higher level api.
 
-You may notice some pink vignnetting on the outside edges of the frame. We can easily download some ISP overrides to solve this issue.
+You may notice some pink vignnetting on the outside edges of the frame. We can easily download some ISP overrides to solve this issue. This is a common issue with wide angle lenses.
 
 ```
 wget https://www.waveshare.com/w/upload/e/eb/Camera_overrides.tar.gz
@@ -108,7 +108,7 @@ sudo chown root:root /var/nvidia/nvcam/settings/camera_overrides.isp
 
 ### 3. Fan and Power Supply Setup
 
-At this point you are up and running with your nano device. If you try running some of the [DeepStream](https://docs.nvidia.com/metropolis/deepstream/4.0/dev-guide/index.html) example projects which use neural nets on video streams you will start to see your nano heat up. You can run `tegrastats` to diagnose your nano.
+At this point you are up and running with your nano device. If you try executing some of the [DeepStream](https://docs.nvidia.com/metropolis/deepstream/4.0/dev-guide/index.html) example projects which use neural nets on video streams you will start to see your nano heat up. You can run `tegrastats` to diagnose your nano.
 
 ```
 $ tegrastats
@@ -121,7 +121,7 @@ thermal@46.75C POM_5V_IN 5716/5591
 POM_5V_GPU 2204/2170 POM_5V_CPU 708/845
 ```
 
-Now it is time to install a proper power supply and fan. The power supply provides `4A * 5V = 20W` of power. In order to use barrell jack instead of microusb, use the jumper pin provided in the devleopment to cover `J48 Power Jack/USB Power Select Jumper`. Plug power supply into barrell and the nano should boot up.
+Now it is time to install a proper power supply and fan. The power supply provides `4A * 5V = 20W` of power, 10W more than you were getting with the micro usb setup. In order to use barrell jack instead of microusb, place the jumper pin provided in the devleopment to cover `J48 Power Jack/USB Power Select Jumper`. Plug power supply into barrell and the nano should now boot up.
 
 ![power](power.png)
 
@@ -129,12 +129,12 @@ To attatch the fan, first use an M3 threading tool to exapnd the holes ontop of 
 
 ### 4. Enclosure and Camera Mount
 
-Attach power an reset button and connect the CSI camera before screwing the board into the base of the box. 
+Attach power an reset button to the correct pions and connect the CSI camera before screwing the board into the base of the box. Geekworm has a [nice video](https://www.youtube.com/watch?v=841XHpND8Aw) that goes over pin locations. 
 
 ![open](inside.jpg)
 
-I attached the camera mount panel to the opposite of the CSI ports to allow the ribbon cable to lay flight when packed.
+I attached the camera mount panel to the opposite of the CSI ports to allow the ribbon cable to lay flight when packed. I did not install the reset button on my build in case I accidentally press it. 
 
 ## Conclusion
 
-Ok, we now have a fully functioning and powerful computer vision camera to work with. In the next experiment, we will build a realtime camera that runs object detection on the gpu.
+Ok, we now have a fully functioning and powerful computer vision camera to work with. The whole build costs far less than $200. In the next experiment, we will build a realtime camera that runs object detection on the gpu. This seems like the go to newb computer vision project, and at the time of writing this, I am a newb.
