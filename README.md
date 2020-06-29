@@ -10,9 +10,9 @@ The goal is to start programming real-time camera pipelines, converting state of
 
 ![prices](prices.png)
 
-I quick look at[prices](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/) and you can see that you actually pay more per cuda core as you go up the product line. The Jetson Nano and TX2 both at around $1 per core. A closer look at the specs,  shows the [Jetson Xavier](https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit) series boards also include tensor cores for doing 8 bit operations, and a dedicated vision processing module which may justify the higher price. 
+I quick look at [prices](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/) and you can see that you actually pay more per cuda core as you go up the product line. The Jetson Nano and TX2 both at around $1 per core. A closer look at the specs,  shows the [Jetson Xavier](https://developer.nvidia.com/embedded/jetson-agx-xavier-developer-kit) series boards also include tensor cores for doing 8 bit operations, and a dedicated vision processing module which may justify the higher price. 
 
-So, I decided to build out on a standard Jetson Nano Development kit. Even though the board is listed at $128 for 1k volume, I was able to find one Amazon for a little over a $100. My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up. This guide will go over how I put it all together.
+So, I decided to build out on a standard Jetson Nano Development kit. Even though the board is listed at $128 for 1k volume, I was able to find one Amazon for a little over $100. My go to strategy in hardware is always to start small. I want to fully utilize the computing resources before leveling up. This guide will go over how I put it all together.
 
 ![jetson nano](jetson_nano.jpg)
 
@@ -80,13 +80,13 @@ LANIP=$(echo "${IPADDRS}" | grep 192 | grep -v 255)
 echo "${LANIP}"
 ```
 
-It usually much more comferatable to develop over SSH with your day to day machine. If you need to visualize a realtime display then you will need to use the nano board directly.
+It usually much more comfortable to develop over SSH with your day to day machine. If you need to visualize a real-time display then you will need to use the nano board directly.
 
 ### 2. Attach/Configure Sony IMX219 Camera Sensor
 
-Pretty simple to install camera into one of the two CSI ports on the jetson nano, make sure contact stripts are facing towards the device and secure the clip for stable contact.
+Pretty simple to install the camera into one of the two CSI ports on the Jetson Nano, make sure the contact stripts are facing towards the device and secure the clip for stable contact.
 
-Now you can check if the camera is working by capturing a live video stream and displaying. To view display you will need a monitor connected over HDMI.
+Now you can check if the camera is working by capturing a live video stream and displaying the video on a monitor.
 
 ```
 gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! nvoverlaysink
@@ -94,7 +94,7 @@ gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! nvoverlaysink
 
 Gstreamer is a great tool for handling video feeds. Highly recommend the [intro tutorials](https://gstreamer.freedesktop.org/documentation/tutorials/basic/index.html?gi-language=c) which use the C API. Your Jetpack Gstreamer comes with hardware acceleration out of the box.
 
-[nvarguscamerasrc](Hiaxu2bM2gk_VWiYivfDAs6PoSAV9LNuVKM_T1cAbmyGW6mYM8E_0c) is a Nvidia tool for automating camera bring up and configurations. It uses the [libargus](https://docs.nvidia.com/jetson/l4t-multimedia/group__LibargusAPI.html) API under the hood. You can further configure camera paramters like whitebalance, and exposure using this higher level api.
+[nvarguscamerasrc](Hiaxu2bM2gk_VWiYivfDAs6PoSAV9LNuVKM_T1cAbmyGW6mYM8E_0c) is a Nvidia tool for automating camera bring up and configurations. It uses the [libargus](https://docs.nvidia.com/jetson/l4t-multimedia/group__LibargusAPI.html) API under the hood. You can further configure camera parameters like whitebalance, and exposure using this higher level api.
 
 You may notice some pink vignnetting on the outside edges of the frame. We can easily download some ISP overrides to solve this issue. This is a common issue with wide angle lenses.
 
@@ -121,19 +121,19 @@ thermal@46.75C POM_5V_IN 5716/5591
 POM_5V_GPU 2204/2170 POM_5V_CPU 708/845
 ```
 
-Now it is time to install a proper power supply and fan. The power supply provides `4A * 5V = 20W` of power, 10W more than you were getting with the micro usb setup. In order to use barrell jack instead of microusb, place the jumper pin provided in the devleopment to cover `J48 Power Jack/USB Power Select Jumper`. Plug power supply into barrell and the nano should now boot up.
+Now it is time to install a proper power supply and fan. The power supply provides `4A * 5V = 20W` of power, 10W more than you were getting with the micro usb setup. In order to use barrel jack instead of the microusb, place the jumper pin provided in the development to cover `J48 Power Jack/USB Power Select Jumper`. Plug power supply into barrel and the Nano should now boot up.
 
 ![power](power.png)
 
-To attatch the fan, first use an M3 threading tool to exapnd the holes ontop of the heatsink. I used an `Aligle 5pcs Brand New Daily Household Steel Silver Adjustable T Type One-Hand Ratchet Wrench with M3-M8 Taps Threading Tool (M3-M8)` to get the job done. Next use M3 25mm hex screws to bolt the fan to the heatsink.
+To attach the fan, first use an M3 threading tool to expand the holes on top of the heatsink. I used an `Aligle 5pcs Brand New Daily Household Steel Silver Adjustable T Type One-Hand Ratchet Wrench with M3-M8 Taps Threading Tool (M3-M8)` to get the job done. Next use M3 25mm hex screws to bolt the fan to the heatsink.
 
 ### 4. Enclosure and Camera Mount
 
-Attach power an reset button to the correct pions and connect the CSI camera before screwing the board into the base of the box. Geekworm has a [nice video](https://www.youtube.com/watch?v=841XHpND8Aw) that goes over pin locations. 
+Attach power and reset button to the correct pions and connect the CSI camera before screwing the board into the base of the box. Geekworm has a [nice video](https://www.youtube.com/watch?v=841XHpND8Aw) that goes over pin locations. 
 
 ![open](inside.jpg)
 
-I attached the camera mount panel to the opposite of the CSI ports to allow the ribbon cable to lay flight when packed. I did not install the reset button on my build in case I accidentally press it. 
+I inserted the camera mount panel to the opposite of the CSI ports to allow the ribbon cable to lay flight when packed. I did not install the reset button on my build in case I accidentally press it. 
 
 ## Conclusion
 
